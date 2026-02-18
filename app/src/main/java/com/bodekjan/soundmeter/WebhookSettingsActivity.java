@@ -56,7 +56,7 @@ public class WebhookSettingsActivity extends Activity {
 
         btnSave.setOnClickListener(v -> {
             String url = editUrl.getText().toString().trim();
-            if (!url.isEmpty() && !url.startsWith("http://") && !url.startsWith("https://")) {
+            if (!url.isEmpty() && !url.startsWith("https://")) {
                 Toast.makeText(this, getString(R.string.webhook_invalid_url), Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -74,6 +74,7 @@ public class WebhookSettingsActivity extends Activity {
             editUrl.setText("");
             spinnerInterval.setSelection(intervalIndex(DEFAULT_INTERVAL));
             Toast.makeText(this, getString(R.string.webhook_cleared), Toast.LENGTH_SHORT).show();
+            finish();
         });
     }
 
@@ -86,10 +87,22 @@ public class WebhookSettingsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private int intervalIndex(int seconds) {
+    static int intervalIndex(int seconds) {
+        // Try to find an exact match for the requested interval.
         for (int i = 0; i < INTERVALS.length; i++) {
-            if (INTERVALS[i] == seconds) return i;
+            if (INTERVALS[i] == seconds) {
+                return i;
+            }
         }
-        return 1; // default to 10s
+
+        // If no exact match, fall back to the index of DEFAULT_INTERVAL if present.
+        for (int i = 0; i < INTERVALS.length; i++) {
+            if (INTERVALS[i] == DEFAULT_INTERVAL) {
+                return i;
+            }
+        }
+
+        // As a last resort, fall back to the first interval.
+        return 0;
     }
 }

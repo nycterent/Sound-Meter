@@ -3,6 +3,9 @@ package com.bodekjan.soundmeter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -24,6 +27,8 @@ import java.util.concurrent.Executors;
  */
 public class WebhookManager {
 
+    private static final String TAG = "WebhookManager";
+
     public interface StatusListener {
         /** Called on the main thread after every attempt. */
         void onStatusChanged(boolean success);
@@ -35,9 +40,9 @@ public class WebhookManager {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private StatusListener statusListener;
 
-    private String webhookUrl;
-    private int intervalSeconds;
-    private boolean running = false;
+    private volatile String webhookUrl;
+    private volatile int intervalSeconds;
+    private volatile boolean running = false;
     private int retryDelayMs = 0;
 
     /** Kicks off a single POST, then schedules the next one when done. */
@@ -89,28 +94,46 @@ public class WebhookManager {
         handler.removeCallbacks(postRunnable);
     }
 
+    /**
+     * Fully shuts down this manager and its background executor.
+     * Call this when the owning component (e.g., Activity/Service) is destroyed.
+     */
+    public void shutdown() {
+        stop();
+        executor.shutdownNow();
+    }
+
     public boolean isRunning() {
         return running;
     }
 
     // -----------------------------------------------------------------------
 
-    private String buildPayload() {
+    String buildPayload() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String timestamp = sdf.format(new Date());
-        String deviceId = Build.MODEL.toLowerCase(Locale.US).replaceAll("\\s+", "-");
+        String rawModel = (Build.MODEL != null) ? Build.MODEL.toLowerCase(Locale.US) : "unknown";
+        String deviceId = rawModel.replaceAll("\\s+", "-").replaceAll("[^a-z0-9-]", "");
+        if (deviceId.isEmpty()) {
+            deviceId = "unknown";
+        }
 
-        return "{"
-                + "\"db_level\":" + String.format(Locale.US, "%.1f", World.dbCount) + ","
-                + "\"db_max\":" + String.format(Locale.US, "%.1f", World.maxDB) + ","
-                + "\"db_min\":" + String.format(Locale.US, "%.1f", World.minDB) + ","
-                + "\"timestamp\":\"" + timestamp + "\","
-                + "\"device_id\":\"" + deviceId + "\""
-                + "}";
+        try {
+            JSONObject json = new JSONObject();
+            json.put("db_level", Math.round(World.dbCount * 10.0) / 10.0);
+            json.put("db_max", Math.round(World.maxDB * 10.0) / 10.0);
+            json.put("db_min", Math.round(World.minDB * 10.0) / 10.0);
+            json.put("timestamp", timestamp);
+            json.put("device_id", deviceId);
+            return json.toString();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to build JSON payload", e);
+            return "{}";
+        }
     }
 
-    private boolean sendPost(String urlString, String jsonBody) {
+    boolean sendPost(String urlString, String jsonBody) {
         HttpURLConnection conn = null;
         try {
             URL url = new URL(urlString);
@@ -130,6 +153,7 @@ public class WebhookManager {
             int code = conn.getResponseCode();
             return code >= 200 && code < 300;
         } catch (Exception e) {
+            Log.w(TAG, "Webhook POST failed: " + e.getMessage(), e);
             return false;
         } finally {
             if (conn != null) conn.disconnect();

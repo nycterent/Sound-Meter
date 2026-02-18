@@ -22,10 +22,11 @@
 	<string name="webhook_clear">Clear / Disable</string>
 	<string name="webhook_saved">Webhook settings saved</string>
 	<string name="webhook_cleared">Webhook disabled</string>
-	<string name="webhook_invalid_url">URL must start with http:// or https://</string>
+	<string name="webhook_invalid_url">URL must start with https://</string>
 	<string name="webhook_status_active">Webhook ✅</string>
 	<string name="webhook_status_failed">Webhook ❌</string>
 	<string name="webhook_button_desc">Webhook settings</string>
+	<string name="webhook_status_pending">Webhook ⏳</string>
 	<!-- dialog_info.xml -->
 	<string name="info_0db">0dB : Most people just hear a low noise.</string>
 	<string name="info_30db">30dB～40dB it\'s the ideal calm.</string>

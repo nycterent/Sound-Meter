@@ -19,12 +19,14 @@
             android:layout_marginBottom="24dp" />
 
         <TextView
+            android:id="@+id/labelWebhookUrl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/webhook_url_label"
             android:textColor="@color/external_progress2"
             android:textSize="14sp"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:labelFor="@+id/editWebhookUrl" />
 
         <EditText
             android:id="@+id/editWebhookUrl"
@@ -37,16 +39,18 @@
             android:backgroundTint="#555555"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_marginBottom="20dp" />
 
         <TextView
+            android:id="@+id/labelInterval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/webhook_interval_label"
             android:textColor="@color/external_progress2"
             android:textSize="14sp"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:labelFor="@+id/spinnerInterval" />
 
         <Spinner
             android:id="@+id/spinnerInterval"

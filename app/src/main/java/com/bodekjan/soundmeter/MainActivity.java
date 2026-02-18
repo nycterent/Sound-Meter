@@ -153,13 +153,15 @@ public class MainActivity extends Activity {
 
         webhookStatus=(TextView)findViewById(R.id.webhookStatus);
 
+        final TextView statusView = webhookStatus;
         webhookManager.setStatusListener(success -> {
-            if (webhookStatus != null) {
-                webhookStatus.setVisibility(View.VISIBLE);
-                webhookStatus.setText(success
-                        ? getString(R.string.webhook_status_active)
-                        : getString(R.string.webhook_status_failed));
+            if (statusView == null) {
+                return;
             }
+            statusView.setVisibility(View.VISIBLE);
+            statusView.setText(success
+                    ? getString(R.string.webhook_status_active)
+                    : getString(R.string.webhook_status_failed));
         });
 
         speedometer=(Speedometer)findViewById(R.id.speed);
@@ -176,7 +178,7 @@ public class MainActivity extends Activity {
             webhookManager.start(url, interval);
             if (webhookStatus != null) {
                 webhookStatus.setVisibility(View.VISIBLE);
-                webhookStatus.setText(getString(R.string.webhook_status_active));
+                webhookStatus.setText(getString(R.string.webhook_status_pending));
             }
         } else {
             if (webhookStatus != null) {
@@ -371,7 +373,7 @@ public class MainActivity extends Activity {
             thread = null;
         }
         mRecorder.delete();
-        webhookManager.stop();
+        webhookManager.shutdown();
         super.onDestroy();
     }
 

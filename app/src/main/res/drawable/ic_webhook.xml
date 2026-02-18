@@ -8,10 +8,10 @@
     <path
         android:fillColor="#FFFFFF"
         android:pathData="M36,20 C35.3,14.4 30.6,10 25,10 C20.6,10 16.8,12.5 14.8,16.2 C10.9,16.8 8,20.1 8,24 C8,28.4 11.6,32 16,32 L36,32 C39.3,32 42,29.3 42,26 C42,22.8 39.4,20.2 36,20 Z" />
-    <!-- Arrow down -->
+    <!-- Arrow up (upload direction) -->
     <path
         android:fillColor="#333333"
-        android:pathData="M25,36 L25,22 M20,27 L25,22 L30,27"
+        android:pathData="M25,18 L25,32 M20,23 L25,18 L30,23"
         android:strokeColor="#333333"
         android:strokeWidth="2"
         android:strokeLineCap="round"
