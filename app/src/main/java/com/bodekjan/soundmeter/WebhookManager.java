@@ -118,9 +118,9 @@ public class WebhookManager {
 
         try {
             JSONObject json = new JSONObject();
-            json.put("db_level", Double.parseDouble(String.format(Locale.US, "%.1f", World.dbCount)));
-            json.put("db_max", Double.parseDouble(String.format(Locale.US, "%.1f", World.maxDB)));
-            json.put("db_min", Double.parseDouble(String.format(Locale.US, "%.1f", World.minDB)));
+            json.put("db_level", Math.round(World.dbCount * 10.0) / 10.0);
+            json.put("db_max", Math.round(World.maxDB * 10.0) / 10.0);
+            json.put("db_min", Math.round(World.minDB * 10.0) / 10.0);
             json.put("timestamp", timestamp);
             json.put("device_id", deviceId);
             return json.toString();
