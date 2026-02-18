@@ -115,6 +115,9 @@ public class WebhookManager {
         String timestamp = sdf.format(new Date());
         String rawModel = (Build.MODEL != null) ? Build.MODEL.toLowerCase(Locale.US) : "unknown";
         String deviceId = rawModel.replaceAll("\\s+", "-").replaceAll("[^a-z0-9-]", "");
+        if (deviceId.isEmpty()) {
+            deviceId = "unknown";
+        }
 
         try {
             JSONObject json = new JSONObject();
