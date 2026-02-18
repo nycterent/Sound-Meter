@@ -3,6 +3,8 @@ package com.bodekjan.soundmeter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -41,6 +43,8 @@ public class MainActivity extends Activity {
     public static Typeface tf;
     ImageButton infoButton;
     ImageButton refreshButton;
+    ImageButton webhookButton;
+    TextView webhookStatus;
     LineChart mChart;
     TextView minVal;
     TextView maxVal;
@@ -57,6 +61,8 @@ public class MainActivity extends Activity {
     float volume = 10000;
     int refresh=0;
     private MyMediaRecorder mRecorder ;
+    /* Webhook */
+    private final WebhookManager webhookManager = new WebhookManager();
 
     final Handler handler = new Handler(){
         @Override
@@ -137,8 +143,46 @@ public class MainActivity extends Activity {
             }
         });
 
+        webhookButton=(ImageButton)findViewById(R.id.webhookbutton);
+        webhookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, WebhookSettingsActivity.class));
+            }
+        });
+
+        webhookStatus=(TextView)findViewById(R.id.webhookStatus);
+
+        webhookManager.setStatusListener(success -> {
+            if (webhookStatus != null) {
+                webhookStatus.setVisibility(View.VISIBLE);
+                webhookStatus.setText(success
+                        ? getString(R.string.webhook_status_active)
+                        : getString(R.string.webhook_status_failed));
+            }
+        });
+
         speedometer=(Speedometer)findViewById(R.id.speed);
         mRecorder = new MyMediaRecorder();
+    }
+
+    private void startWebhookIfConfigured() {
+        SharedPreferences prefs = getSharedPreferences(
+                WebhookSettingsActivity.PREFS_NAME, MODE_PRIVATE);
+        String url = prefs.getString(WebhookSettingsActivity.PREF_URL, "");
+        int interval = prefs.getInt(WebhookSettingsActivity.PREF_INTERVAL,
+                WebhookSettingsActivity.DEFAULT_INTERVAL);
+        if (!url.isEmpty()) {
+            webhookManager.start(url, interval);
+            if (webhookStatus != null) {
+                webhookStatus.setVisibility(View.VISIBLE);
+                webhookStatus.setText(getString(R.string.webhook_status_active));
+            }
+        } else {
+            if (webhookStatus != null) {
+                webhookStatus.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void updateData(float val, long time) {
@@ -304,6 +348,7 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), getString(R.string.activity_recFileErr), Toast.LENGTH_LONG).show();
         }
         bListener = true;
+        startWebhookIfConfigured();
     }
 
     /**
@@ -316,6 +361,7 @@ public class MainActivity extends Activity {
         mRecorder.delete(); //Stop recording and delete the recording file
         thread = null;
         isChart=false;
+        webhookManager.stop();
     }
 
     @Override
@@ -325,6 +371,7 @@ public class MainActivity extends Activity {
             thread = null;
         }
         mRecorder.delete();
+        webhookManager.stop();
         super.onDestroy();
     }
 

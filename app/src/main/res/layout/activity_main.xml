@@ -34,6 +34,17 @@
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:id="@+id/webhookbutton"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_webhook"
+            android:background="@android:color/transparent"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/webhook_button_desc" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:id="@+id/refreshbutton"
             android:layout_gravity="left|top"
             android:layout_marginTop="32dp"
@@ -159,7 +170,7 @@
         android:id="@+id/chartcontainer"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="4dp">
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart1"
             android:layout_width="match_parent"
@@ -168,5 +179,15 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/webhookStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
 
 </LinearLayout>

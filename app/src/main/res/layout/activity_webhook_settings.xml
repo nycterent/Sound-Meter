@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_page"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webhook_title"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webhook_url_label"
+            android:textColor="@color/external_progress2"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/editWebhookUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/webhook_url_hint"
+            android:inputType="textUri"
+            android:textColor="#ffffff"
+            android:textColorHint="#888888"
+            android:backgroundTint="#555555"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:singleLine="true"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webhook_interval_label"
+            android:textColor="@color/external_progress2"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/spinnerInterval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#555555"
+            android:layout_marginBottom="32dp" />
+
+        <Button
+            android:id="@+id/btnSaveWebhook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/webhook_save"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/btnClearWebhook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/webhook_clear"
+            android:backgroundTint="#F44336"
+            android:textColor="#ffffff"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>
