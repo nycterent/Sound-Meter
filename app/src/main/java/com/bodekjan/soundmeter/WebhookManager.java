@@ -114,7 +114,7 @@ public class WebhookManager {
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String timestamp = sdf.format(new Date());
         String rawModel = (Build.MODEL != null) ? Build.MODEL.toLowerCase(Locale.US) : "unknown";
-        String deviceId = rawModel.replaceAll("\\s+", "-").replaceAll("[^a-z0-9\\-]", "");
+        String deviceId = rawModel.replaceAll("\\s+", "-").replaceAll("[^a-z0-9-]", "");
 
         try {
             JSONObject json = new JSONObject();
